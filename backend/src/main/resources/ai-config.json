@@ -1,0 +1,115 @@
+{
+    "boldKeywords": [
+        "auto",
+        "hogar",
+        "salud",
+        "viaje",
+        "terceros",
+        "terceros ampliado",
+        "todo riesgo",
+        "personal",
+        "profesional",
+        "ciudad o zona",
+        "llar"
+    ],
+    "synonyms": {
+        "auto": [
+            "coche",
+            "carro",
+            "vehiculo",
+            "automovil",
+            "auto movil"
+        ],
+        "hogar": [
+            "casa",
+            "vivienda",
+            "domicilio",
+            "home",
+            "house",
+            "maison",
+            "moradia",
+            "llar",
+            "lar",
+            "etxea"
+        ],
+        "salud": [
+            "medico",
+            "sanidad",
+            "seguro medico",
+            "health",
+            "medical",
+            "sante",
+            "saude",
+            "salute"
+        ],
+        "viaje": [
+            "viajar",
+            "travel",
+            "trip",
+            "voyage",
+            "viagem",
+            "viaggio",
+            "turismo"
+        ],
+        "personal": [
+            "particular",
+            "privado",
+            "uso propio",
+            "private",
+            "personal use",
+            "personnel",
+            "privato"
+        ],
+        "profesional": [
+            "trabajo",
+            "laboral",
+            "empresa",
+            "empresarial",
+            "comercial",
+            "negocio",
+            "business",
+            "commercial"
+        ],
+        "residencia habitual": [
+            "habitual",
+            "principal",
+            "primera vivienda",
+            "vivienda habitual",
+            "casa principal",
+            "primary residence"
+        ],
+        "segunda vivienda": [
+            "segunda",
+            "vacacional",
+            "veraneo",
+            "casa de verano",
+            "second home",
+            "secondary home",
+            "vacation home",
+            "holiday home",
+            "residence secondaire",
+            "seconda casa"
+        ],
+        "ocio": [
+            "vacaciones",
+            "recreo",
+            "leisure",
+            "vacation",
+            "tourism",
+            "vacances",
+            "lazer",
+            "tempo libero"
+        ],
+        "trabajo": [
+            "laboral",
+            "negocios",
+            "empresa",
+            "profesional",
+            "business",
+            "work",
+            "affaires",
+            "trabalho",
+            "lavoro"
+        ]
+    }
+}

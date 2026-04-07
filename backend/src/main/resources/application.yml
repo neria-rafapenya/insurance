@@ -1,0 +1,38 @@
+spring:
+  config:
+    import: optional:file:.env[.properties]
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/validadores?useSSL=false&serverTimezone=UTC}
+    username: ${SPRING_DATASOURCE_USERNAME:lgqpenya}
+    password: ${SPRING_DATASOURCE_PASSWORD:raiz}
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+
+server:
+  port: ${SERVER_PORT:8080}
+
+app:
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:8612}
+
+ai:
+  model: ${OPENAI_MODEL:gpt-4.1-mini}
+  output-format: ${AI_OUTPUT_FORMAT:json_object}
+  prompt-file: ${AI_PROMPT_FILE:classpath:prompts/wizard.md}
+  max-history: ${AI_MAX_HISTORY:16}
+  temperature: ${AI_TEMPERATURE:0.2}
+  validation-prompt-file: ${AI_VALIDATION_PROMPT_FILE:classpath:prompts/validation.md}
+  propuesta-prompt-file: ${AI_PROPUESTA_PROMPT_FILE:classpath:prompts/propuesta.md}
+
+openai:
+  base-url: ${OPENAI_API_URL:https://api.openai.com/v1}
+
+security:
+  jwt:
+    secret: ${JWT_SECRET:qciDjMVEKje_X7iwB-EKiqk1w-qQYQGOxToAY02LEW0i5p5ZuM24Dl4RKrVpyfq4}
+    expiration-minutes: ${JWT_EXP_MINUTES:480}

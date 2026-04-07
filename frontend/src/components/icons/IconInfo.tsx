@@ -1,0 +1,32 @@
+type IconInfoProps = {
+  width?: number | string;
+  height?: number | string;
+  color?: string;
+  className?: string;
+};
+
+const IconInfo = ({
+  width = 16,
+  height = 16,
+  color = "currentColor",
+  className,
+}: IconInfoProps) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={width}
+      height={height}
+      viewBox="0 0 96 96"
+      fill="none"
+      className={className}
+      aria-hidden="true"
+    >
+      <path
+        d="M48 8C25.92 8 8 25.92 8 48C8 70.08 25.92 88 48 88C70.08 88 88 70.08 88 48C88 25.92 70.08 8 48 8ZM52 68H44V44H52V68ZM52 36H44V28H52V36Z"
+        fill={color}
+      />
+    </svg>
+  );
+};
+
+export default IconInfo;
