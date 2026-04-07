@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { authFetch } from "../../auth/authApi";
 import { useAuth } from "../../auth/AuthContext";
@@ -166,7 +166,11 @@ const RiskFactorsAdmin = () => {
           <h2>Factores de riesgo</h2>
           <p>Configura reglas que alimentan la validación y pricing.</p>
         </div>
-        <button type="button" className="btn btn-outline-primary" onClick={load}>
+        <button
+          type="button"
+          className="btn btn-outline-primary"
+          onClick={load}
+        >
           Refrescar
         </button>
       </div>
@@ -199,7 +203,10 @@ const RiskFactorsAdmin = () => {
             <input
               value={createForm.campo}
               onChange={(event) =>
-                setCreateForm((prev) => ({ ...prev, campo: event.target.value }))
+                setCreateForm((prev) => ({
+                  ...prev,
+                  campo: event.target.value,
+                }))
               }
             />
           </label>
@@ -208,7 +215,10 @@ const RiskFactorsAdmin = () => {
             <input
               value={createForm.fuente}
               onChange={(event) =>
-                setCreateForm((prev) => ({ ...prev, fuente: event.target.value }))
+                setCreateForm((prev) => ({
+                  ...prev,
+                  fuente: event.target.value,
+                }))
               }
             />
           </label>
@@ -282,7 +292,11 @@ const RiskFactorsAdmin = () => {
             />
           </label>
         </div>
-        <button type="button" className="btn btn-primary" onClick={handleCreate}>
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={handleCreate}
+        >
           Crear factor
         </button>
       </div>
@@ -316,7 +330,9 @@ const RiskFactorsAdmin = () => {
                       value={editForm.tipoSeguro ?? ""}
                       onChange={(event) =>
                         setEditForm((prev) =>
-                          prev ? { ...prev, tipoSeguro: event.target.value } : prev,
+                          prev
+                            ? { ...prev, tipoSeguro: event.target.value }
+                            : prev,
                         )
                       }
                       placeholder="tipo"
@@ -341,7 +357,9 @@ const RiskFactorsAdmin = () => {
                       value={editForm.tipoMatch}
                       onChange={(event) =>
                         setEditForm((prev) =>
-                          prev ? { ...prev, tipoMatch: event.target.value } : prev,
+                          prev
+                            ? { ...prev, tipoMatch: event.target.value }
+                            : prev,
                         )
                       }
                     >
@@ -356,7 +374,9 @@ const RiskFactorsAdmin = () => {
                       value={editForm.valorMatch}
                       onChange={(event) =>
                         setEditForm((prev) =>
-                          prev ? { ...prev, valorMatch: event.target.value } : prev,
+                          prev
+                            ? { ...prev, valorMatch: event.target.value }
+                            : prev,
                         )
                       }
                     />
@@ -364,7 +384,9 @@ const RiskFactorsAdmin = () => {
                       value={editForm.valorResultado ?? ""}
                       onChange={(event) =>
                         setEditForm((prev) =>
-                          prev ? { ...prev, valorResultado: event.target.value } : prev,
+                          prev
+                            ? { ...prev, valorResultado: event.target.value }
+                            : prev,
                         )
                       }
                     />
@@ -376,7 +398,10 @@ const RiskFactorsAdmin = () => {
                           prev
                             ? {
                                 ...prev,
-                                prioridad: Number.parseInt(event.target.value, 10),
+                                prioridad: Number.parseInt(
+                                  event.target.value,
+                                  10,
+                                ),
                               }
                             : prev,
                         )
@@ -388,14 +413,20 @@ const RiskFactorsAdmin = () => {
                         checked={Boolean(editForm.activo)}
                         onChange={(event) =>
                           setEditForm((prev) =>
-                            prev ? { ...prev, activo: event.target.checked } : prev,
+                            prev
+                              ? { ...prev, activo: event.target.checked }
+                              : prev,
                           )
                         }
                       />
                       Activo
                     </label>
                     <div className="admin-actions">
-                      <button type="button" className="btn btn-primary" onClick={handleUpdate}>
+                      <button
+                        type="button"
+                        className="btn btn-primary"
+                        onClick={handleUpdate}
+                      >
                         Guardar
                       </button>
                       <button
@@ -420,8 +451,12 @@ const RiskFactorsAdmin = () => {
                     </div>
                     <div className="admin-meta">{item.fuente}</div>
                     <div className="admin-meta">{item.valorMatch}</div>
-                    <div className="admin-meta">{item.valorResultado ?? "-"}</div>
-                    <div className="admin-meta">Prioridad {item.prioridad ?? 0}</div>
+                    <div className="admin-meta">
+                      {item.valorResultado ?? "-"}
+                    </div>
+                    <div className="admin-meta">
+                      Prioridad {item.prioridad ?? 0}
+                    </div>
                     <div className="admin-actions">
                       <button
                         type="button"

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { authFetch } from "../../auth/authApi";
 import { useAuth } from "../../auth/AuthContext";
@@ -155,7 +155,11 @@ const PromptsAdmin = () => {
           <h2>Prompts</h2>
           <p>Gestiona las plantillas de conversación del wizard.</p>
         </div>
-        <button type="button" className="btn btn-outline-primary" onClick={load}>
+        <button
+          type="button"
+          className="btn btn-outline-primary"
+          onClick={load}
+        >
           Refrescar
         </button>
       </div>
@@ -185,7 +189,10 @@ const PromptsAdmin = () => {
             <input
               value={createForm.templateKey}
               onChange={(event) =>
-                setCreateForm((prev) => ({ ...prev, templateKey: event.target.value }))
+                setCreateForm((prev) => ({
+                  ...prev,
+                  templateKey: event.target.value,
+                }))
               }
             />
           </label>
@@ -194,7 +201,10 @@ const PromptsAdmin = () => {
             <input
               value={createForm.language}
               onChange={(event) =>
-                setCreateForm((prev) => ({ ...prev, language: event.target.value }))
+                setCreateForm((prev) => ({
+                  ...prev,
+                  language: event.target.value,
+                }))
               }
             />
           </label>
@@ -203,7 +213,10 @@ const PromptsAdmin = () => {
             <select
               value={createForm.tipoSeguro ?? ""}
               onChange={(event) =>
-                setCreateForm((prev) => ({ ...prev, tipoSeguro: event.target.value }))
+                setCreateForm((prev) => ({
+                  ...prev,
+                  tipoSeguro: event.target.value,
+                }))
               }
             >
               {tipoOptions.map((option) => (
@@ -219,7 +232,10 @@ const PromptsAdmin = () => {
               rows={4}
               value={createForm.template}
               onChange={(event) =>
-                setCreateForm((prev) => ({ ...prev, template: event.target.value }))
+                setCreateForm((prev) => ({
+                  ...prev,
+                  template: event.target.value,
+                }))
               }
             />
           </label>
@@ -229,12 +245,19 @@ const PromptsAdmin = () => {
               type="checkbox"
               checked={Boolean(createForm.activo)}
               onChange={(event) =>
-                setCreateForm((prev) => ({ ...prev, activo: event.target.checked }))
+                setCreateForm((prev) => ({
+                  ...prev,
+                  activo: event.target.checked,
+                }))
               }
             />
           </label>
         </div>
-        <button type="button" className="btn btn-primary" onClick={handleCreate}>
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={handleCreate}
+        >
           Crear prompt
         </button>
       </div>
@@ -268,7 +291,9 @@ const PromptsAdmin = () => {
                     <input
                       value={editForm.step}
                       onChange={(event) =>
-                        setEditForm((prev) => (prev ? { ...prev, step: event.target.value } : prev))
+                        setEditForm((prev) =>
+                          prev ? { ...prev, step: event.target.value } : prev,
+                        )
                       }
                       placeholder="step"
                     />
@@ -276,7 +301,9 @@ const PromptsAdmin = () => {
                       value={editForm.templateKey}
                       onChange={(event) =>
                         setEditForm((prev) =>
-                          prev ? { ...prev, templateKey: event.target.value } : prev,
+                          prev
+                            ? { ...prev, templateKey: event.target.value }
+                            : prev,
                         )
                       }
                       placeholder="template_key"
@@ -285,7 +312,9 @@ const PromptsAdmin = () => {
                       value={editForm.language}
                       onChange={(event) =>
                         setEditForm((prev) =>
-                          prev ? { ...prev, language: event.target.value } : prev,
+                          prev
+                            ? { ...prev, language: event.target.value }
+                            : prev,
                         )
                       }
                       placeholder="idioma"
@@ -294,7 +323,9 @@ const PromptsAdmin = () => {
                       value={editForm.tipoSeguro ?? ""}
                       onChange={(event) =>
                         setEditForm((prev) =>
-                          prev ? { ...prev, tipoSeguro: event.target.value } : prev,
+                          prev
+                            ? { ...prev, tipoSeguro: event.target.value }
+                            : prev,
                         )
                       }
                     >
@@ -309,7 +340,9 @@ const PromptsAdmin = () => {
                       value={editForm.template}
                       onChange={(event) =>
                         setEditForm((prev) =>
-                          prev ? { ...prev, template: event.target.value } : prev,
+                          prev
+                            ? { ...prev, template: event.target.value }
+                            : prev,
                         )
                       }
                     />
@@ -319,14 +352,20 @@ const PromptsAdmin = () => {
                         checked={Boolean(editForm.activo)}
                         onChange={(event) =>
                           setEditForm((prev) =>
-                            prev ? { ...prev, activo: event.target.checked } : prev,
+                            prev
+                              ? { ...prev, activo: event.target.checked }
+                              : prev,
                           )
                         }
                       />
                       Activo
                     </label>
                     <div className="admin-actions">
-                      <button type="button" className="btn btn-primary" onClick={handleUpdate}>
+                      <button
+                        type="button"
+                        className="btn btn-primary"
+                        onClick={handleUpdate}
+                      >
                         Guardar
                       </button>
                       <button
@@ -346,7 +385,8 @@ const PromptsAdmin = () => {
                     <div>
                       <strong>{item.templateKey}</strong>
                       <div className="admin-meta">
-                        {item.step} · {item.language} · {item.tipoSeguro || "todos"}
+                        {item.step} · {item.language} ·{" "}
+                        {item.tipoSeguro || "todos"}
                       </div>
                     </div>
                     <div className="admin-meta">{item.template}</div>

@@ -15,6 +15,7 @@ import type {
   StepRiesgoState,
   StepTipoAnswers,
   StepTipoMessage,
+  StepTipoState,
 } from "../../types/wizard";
 import {
   readStepRiesgoState,
@@ -80,7 +81,6 @@ const KEYWORD_REGEX = new RegExp(
   ).join("|")})\\b(?!\\*)`,
   "gi",
 );
-
 
 const HEALTH_PATHOLOGY_KEYWORDS = [
   "asma",
@@ -187,11 +187,11 @@ const extractPathologies = (text: string) => {
     return "";
   }
   if (
-    normalized.includes("sin patolog")
-    || normalized.includes("ninguna")
-    || normalized.includes("ningun")
-    || normalized.includes("ningún")
-    || normalized.includes("no tiene")
+    normalized.includes("sin patolog") ||
+    normalized.includes("ninguna") ||
+    normalized.includes("ningun") ||
+    normalized.includes("ningún") ||
+    normalized.includes("no tiene")
   ) {
     return "ninguna";
   }
@@ -214,10 +214,14 @@ const parseHealthFamilyMembers = (text: string): HealthFamilyMember[] => {
     return [];
   }
   const normalized = normalizeText(trimmed);
-  const hasRiskHints = /(fumador|fumo|smoker|patolog|asma|diabet|cancer|oncolog|alzheimer|parkinson|ela|sida|vih|hiv|bronqui|insuficiencia|renal)/.test(
-    normalized,
-  );
-  const segments = trimmed.split(/[\n;]+/).map((segment) => segment.trim()).filter(Boolean);
+  const hasRiskHints =
+    /(fumador|fumo|smoker|patolog|asma|diabet|cancer|oncolog|alzheimer|parkinson|ela|sida|vih|hiv|bronqui|insuficiencia|renal)/.test(
+      normalized,
+    );
+  const segments = trimmed
+    .split(/[\n;]+/)
+    .map((segment) => segment.trim())
+    .filter(Boolean);
   if (!hasRiskHints) {
     const ages = extractAllNumbers(trimmed);
     return ages.map((age) => ({
@@ -446,8 +450,13 @@ const buildFlow = (
       {
         id: "home-intro",
         prompt: (ctx) => {
-          const ownership = ctx.answers.homeOwnership || ctx.step1.subtipo || "propiedad/alquiler";
-          const ownershipText = ownership.includes("alquiler") ? "alquiler" : ownership;
+          const ownership =
+            ctx.answers.homeOwnership ||
+            ctx.step1.subtipo ||
+            "propiedad/alquiler";
+          const ownershipText = ownership.includes("alquiler")
+            ? "alquiler"
+            : ownership;
           return resolvePrompt(
             "home_intro",
             `Ya sabemos que tu vivienda es en ${ownershipText}, ahora necesitamos saber cómo es. Dinos si es tipo piso, dúplex, chalet, local, trastero...; dinos también los metros cuadrados y el año de construcción aproximado.`,
@@ -461,7 +470,10 @@ const buildFlow = (
       {
         id: "home-location",
         prompt: (ctx) => {
-          const uso = ctx.answers.homeUsage || ctx.step1.uso || "habitual/segunda residencia";
+          const uso =
+            ctx.answers.homeUsage ||
+            ctx.step1.uso ||
+            "habitual/segunda residencia";
           return resolvePrompt(
             "home_location",
             `Antes nos dijiste que usarías la vivienda como ${uso}, pero necesitamos que nos digas la ubicación, código postal, ciudad, provincia y si hay contenido, qué valor en euros consideras que tiene.`,
@@ -487,7 +499,9 @@ const buildFlow = (
         onAnswer: (text) => {
           const age = extractAge(text);
           if (!age) {
-            return { repeat: "Necesito tu edad para continuar. ¿Cuántos años tienes?" };
+            return {
+              repeat: "Necesito tu edad para continuar. ¿Cuántos años tienes?",
+            };
           }
           if (age < 18) {
             return {
@@ -512,7 +526,9 @@ const buildFlow = (
           ),
         onAnswer: (text) => {
           if (!text.trim()) {
-            return { repeat: "Necesito saber si tienes patologías relevantes." };
+            return {
+              repeat: "Necesito saber si tienes patologías relevantes.",
+            };
           }
           return {
             updates: { healthPathologies: text },
@@ -610,10 +626,7 @@ const buildFlow = (
       {
         id: "travel-duration",
         prompt: () =>
-          resolvePrompt(
-            "travel_duration",
-            "¿Qué duración tendrá tu estancia?",
-          ),
+          resolvePrompt("travel_duration", "¿Qué duración tendrá tu estancia?"),
         onAnswer: (text) => {
           const days = extractDurationDays(text);
           if (!days) {
@@ -627,10 +640,7 @@ const buildFlow = (
       {
         id: "travel-purpose",
         prompt: () =>
-          resolvePrompt(
-            "travel_purpose",
-            "¿Es un viaje de ocio o de trabajo?",
-          ),
+          resolvePrompt("travel_purpose", "¿Es un viaje de ocio o de trabajo?"),
         onAnswer: (text) => ({
           updates: { travelPurpose: parseTravelPurpose(text) || text },
         }),
@@ -642,7 +652,7 @@ const buildFlow = (
 };
 
 const StepDatosRiesgo = ({ onNext }: StepDatosRiesgoProps) => {
-  const [stepTipo, setStepTipo] = useState<{ answers: StepTipoAnswers } | null>(null);
+  const [stepTipo, setStepTipo] = useState<StepTipoState | null>(null);
   const [messages, setMessages] = useState<StepTipoMessage[]>([]);
   const [input, setInput] = useState("");
   const [streamingText, setStreamingText] = useState("");
@@ -650,7 +660,9 @@ const StepDatosRiesgo = ({ onNext }: StepDatosRiesgoProps) => {
   const [riskAnswers, setRiskAnswers] = useState<RiskAnswers>({});
   const [riskFlags, setRiskFlags] = useState<RiskFlags>({ pricingFactors: [] });
   const [familyInput, setFamilyInput] = useState("");
-  const [promptTemplates, setPromptTemplates] = useState<Record<string, string>>({});
+  const [promptTemplates, setPromptTemplates] = useState<
+    Record<string, string>
+  >({});
   const [promptsReady, setPromptsReady] = useState(false);
   const threadRef = useRef<HTMLDivElement | null>(null);
   const [showScrollButton, setShowScrollButton] = useState(false);
@@ -689,7 +701,8 @@ const StepDatosRiesgo = ({ onNext }: StepDatosRiesgoProps) => {
   useEffect(() => {
     const load = () => {
       const storedStep = readStepTipoState();
-      setStepTipo(storedStep ? { answers: storedStep.answers } : null);
+      setStepTipo(storedStep);
+
       const storedRisk = readStepRiesgoState();
       if (storedRisk) {
         didInitRef.current = true;
@@ -752,7 +765,9 @@ const StepDatosRiesgo = ({ onNext }: StepDatosRiesgoProps) => {
           language,
           tipo_seguro: tipoKey,
         });
-        const response = await authFetch(`/catalog/prompts?${params.toString()}`);
+        const response = await authFetch(
+          `/catalog/prompts?${params.toString()}`,
+        );
         if (!response.ok) {
           throw new Error("No se pudieron cargar los prompts");
         }
@@ -783,8 +798,8 @@ const StepDatosRiesgo = ({ onNext }: StepDatosRiesgoProps) => {
   }, [tipoKey, language]);
 
   const isHealthFamily =
-    tipoKey === "salud"
-    && normalizeText(riskAnswers.healthPlan ?? "").includes("familiar");
+    tipoKey === "salud" &&
+    normalizeText(riskAnswers.healthPlan ?? "").includes("familiar");
   const healthMembers = riskAnswers.healthFamilyMembers ?? [];
 
   const addHealthMember = () => {
@@ -909,7 +924,9 @@ const StepDatosRiesgo = ({ onNext }: StepDatosRiesgoProps) => {
       return;
     }
     indexRef.current = index;
-    enqueueAssistantReply(step.prompt({ step1: step1Answers, answers: answersRef.current }));
+    enqueueAssistantReply(
+      step.prompt({ step1: step1Answers, answers: answersRef.current }),
+    );
   };
 
   const applyRiskNotes = (notes?: string[]) => {
@@ -927,13 +944,18 @@ const StepDatosRiesgo = ({ onNext }: StepDatosRiesgoProps) => {
   const startConversation = () => {
     const initial: RiskAnswers = {
       autoUsage: parseAutoUsage(step1Answers.uso) || step1Answers.uso || "",
-      homeOwnership: parseOwnership(step1Answers.subtipo) || step1Answers.subtipo || "",
+      homeOwnership:
+        parseOwnership(step1Answers.subtipo) || step1Answers.subtipo || "",
       homeUsage: parseHomeUsage(step1Answers.uso) || step1Answers.uso || "",
-      healthPlan: parseHealthPlan(step1Answers.subtipo) || step1Answers.subtipo || "",
+      healthPlan:
+        parseHealthPlan(step1Answers.subtipo) || step1Answers.subtipo || "",
     };
     setAnswersAndRef(initial);
     flowRef.current = buildFlow(tipoKey, promptTemplates);
-    const firstIndex = findNextIndex(-1, { step1: step1Answers, answers: initial });
+    const firstIndex = findNextIndex(-1, {
+      step1: step1Answers,
+      answers: initial,
+    });
     if (firstIndex >= 0) {
       askQuestion(firstIndex);
     } else {
@@ -980,7 +1002,9 @@ const StepDatosRiesgo = ({ onNext }: StepDatosRiesgoProps) => {
 
   useEffect(() => {
     const handler = (event: Event) => {
-      const detail = (event as CustomEvent).detail as { from?: number; to?: number } | undefined;
+      const detail = (event as CustomEvent).detail as
+        | { from?: number; to?: number }
+        | undefined;
       if (!detail || detail.from !== 1) {
         return;
       }
@@ -1011,7 +1035,8 @@ const StepDatosRiesgo = ({ onNext }: StepDatosRiesgoProps) => {
       return;
     }
     const maxScrollTop = container.scrollHeight - container.clientHeight;
-    const atBottom = maxScrollTop <= 0 || container.scrollTop >= maxScrollTop - 8;
+    const atBottom =
+      maxScrollTop <= 0 || container.scrollTop >= maxScrollTop - 8;
     setShowScrollButton(!atBottom);
   };
 
@@ -1041,7 +1066,10 @@ const StepDatosRiesgo = ({ onNext }: StepDatosRiesgoProps) => {
       return;
     }
 
-    const ctx: RiskContext = { step1: step1Answers, answers: answersRef.current };
+    const ctx: RiskContext = {
+      step1: step1Answers,
+      answers: answersRef.current,
+    };
     const result = step.onAnswer(value, ctx);
 
     if (result.reject) {
@@ -1069,7 +1097,9 @@ const StepDatosRiesgo = ({ onNext }: StepDatosRiesgoProps) => {
 
     if (nextIndex < 0) {
       setDone(true);
-      enqueueAssistantReply("Tenemos lo necesario, puedes ir al siguiente paso.");
+      enqueueAssistantReply(
+        "Tenemos lo necesario, puedes ir al siguiente paso.",
+      );
       return;
     }
 
@@ -1094,7 +1124,10 @@ const StepDatosRiesgo = ({ onNext }: StepDatosRiesgoProps) => {
     if (tipoKey === "auto") {
       return [
         { label: "Vehículo", value: riskAnswers.autoVehicle },
-        { label: "Edad", value: riskAnswers.autoAge ? `${riskAnswers.autoAge} años` : "" },
+        {
+          label: "Edad",
+          value: riskAnswers.autoAge ? `${riskAnswers.autoAge} años` : "",
+        },
         {
           label: "Uso",
           value: riskAnswers.autoUsage || step1Answers.uso,
@@ -1109,7 +1142,10 @@ const StepDatosRiesgo = ({ onNext }: StepDatosRiesgoProps) => {
           label: "Tenencia",
           value: riskAnswers.homeOwnership || step1Answers.subtipo,
         },
-        { label: "Tipo vivienda / m2 / año", value: riskAnswers.homeTypeDetails },
+        {
+          label: "Tipo vivienda / m2 / año",
+          value: riskAnswers.homeTypeDetails,
+        },
         {
           label: "Uso",
           value: riskAnswers.homeUsage || step1Answers.uso,
@@ -1164,7 +1200,10 @@ const StepDatosRiesgo = ({ onNext }: StepDatosRiesgoProps) => {
       <div className="risk-header">
         <div className="risk-icon">
           {TipoIcon ? (
-            <TipoIcon className="risk-icon__svg" title={`Seguro ${tipoLabel}`} />
+            <TipoIcon
+              className="risk-icon__svg"
+              title={`Seguro ${tipoLabel}`}
+            />
           ) : (
             <div className="risk-icon__placeholder">?</div>
           )}
@@ -1189,12 +1228,17 @@ const StepDatosRiesgo = ({ onNext }: StepDatosRiesgoProps) => {
                 if (msg.role === "assistant") {
                   const AgentIcon = pickAgentIcon(index);
                   return (
-                    <div key={`${msg.role}-${index}`} className="llm-row llm-row--assistant">
+                    <div
+                      key={`${msg.role}-${index}`}
+                      className="llm-row llm-row--assistant"
+                    >
                       <div className="llm-avatar">
                         <AgentIcon className="llm-avatar__icon" />
                       </div>
                       <div className="llm-bubble llm-bubble--assistant">
-                        <ReactMarkdown>{highlightKeywords(msg.text)}</ReactMarkdown>
+                        <ReactMarkdown>
+                          {highlightKeywords(msg.text)}
+                        </ReactMarkdown>
                       </div>
                     </div>
                   );
@@ -1217,7 +1261,9 @@ const StepDatosRiesgo = ({ onNext }: StepDatosRiesgoProps) => {
                     })()}
                   </div>
                   <div className="llm-bubble llm-bubble--assistant llm-bubble--streaming">
-                    <ReactMarkdown>{highlightKeywords(streamingText)}</ReactMarkdown>
+                    <ReactMarkdown>
+                      {highlightKeywords(streamingText)}
+                    </ReactMarkdown>
                   </div>
                 </div>
               ) : null}
@@ -1259,7 +1305,9 @@ const StepDatosRiesgo = ({ onNext }: StepDatosRiesgoProps) => {
               <div className="health-family-header">
                 <div>
                   <h4>Personas aseguradas</h4>
-                  <p>Indica edad, si fuma y patologías relevantes por persona.</p>
+                  <p>
+                    Indica edad, si fuma y patologías relevantes por persona.
+                  </p>
                 </div>
                 <button
                   type="button"
@@ -1307,7 +1355,11 @@ const StepDatosRiesgo = ({ onNext }: StepDatosRiesgoProps) => {
                         <select
                           value={member.fumador ?? ""}
                           onChange={(event) =>
-                            updateHealthMember(member.id, "fumador", event.target.value)
+                            updateHealthMember(
+                              member.id,
+                              "fumador",
+                              event.target.value,
+                            )
                           }
                         >
                           <option value="">Selecciona</option>
@@ -1321,7 +1373,11 @@ const StepDatosRiesgo = ({ onNext }: StepDatosRiesgoProps) => {
                           type="text"
                           value={member.patologias ?? ""}
                           onChange={(event) =>
-                            updateHealthMember(member.id, "patologias", event.target.value)
+                            updateHealthMember(
+                              member.id,
+                              "patologias",
+                              event.target.value,
+                            )
                           }
                           placeholder="Ej. asma, diabetes o ninguna"
                         />

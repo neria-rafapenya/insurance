@@ -1,4 +1,3 @@
-import React from "react";
 import LottieImport from "lottie-react";
 
 const animationData = {
@@ -411,10 +410,16 @@ type LoaderDotProps = {
 
 const LoaderDot = ({ size = 48, className }: LoaderDotProps) => {
   const Lottie =
-    (LottieImport as unknown as { default?: typeof LottieImport }).default ?? LottieImport;
+    (LottieImport as unknown as { default?: typeof LottieImport }).default ??
+    LottieImport;
   return (
     <div className={className} aria-label="Cargando" role="status">
-      <Lottie animationData={animationData} loop autoplay style={{ width: size, height: size }} />
+      <Lottie
+        animationData={animationData}
+        loop
+        autoplay
+        style={{ width: size, height: size }}
+      />
     </div>
   );
 };

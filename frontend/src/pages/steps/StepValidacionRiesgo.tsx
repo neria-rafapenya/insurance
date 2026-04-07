@@ -203,10 +203,7 @@ const StepValidacionRiesgo = ({ onNext }: StepValidacionRiesgoProps) => {
     );
     output = output.replace(/Resultado:/gi, "**Resultado:**");
     output = output.replace(/Recargos estimados:/gi, "**Recargos estimados:**");
-    output = output.replace(
-      /(Podemos[^\n]*Coberturas\.?)/gi,
-      "**$1**",
-    );
+    output = output.replace(/(Podemos[^\n]*Coberturas\.?)/gi, "**$1**");
 
     for (const token of emphasisTokens) {
       if (!token) {
@@ -214,7 +211,7 @@ const StepValidacionRiesgo = ({ onNext }: StepValidacionRiesgoProps) => {
       }
       const escaped = token.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
       const pattern = new RegExp(`(^|[^\\w])(${escaped})(?=[^\\w]|$)`, "gi");
-      output = output.replace(pattern, (match, prefix, value) => {
+      output = output.replace(pattern, (prefix, value) => {
         if (value.startsWith("**") && value.endsWith("**")) {
           return `${prefix}${value}`;
         }
@@ -303,7 +300,10 @@ const StepValidacionRiesgo = ({ onNext }: StepValidacionRiesgoProps) => {
             continue;
           }
           try {
-            const event = JSON.parse(data) as { type?: string; value?: unknown };
+            const event = JSON.parse(data) as {
+              type?: string;
+              value?: unknown;
+            };
             if (event.type === "token") {
               const token = String(event.value ?? "");
               if (token) {
@@ -375,7 +375,10 @@ const StepValidacionRiesgo = ({ onNext }: StepValidacionRiesgoProps) => {
       <div className="risk-header">
         <div className="risk-icon">
           {TipoIcon ? (
-            <TipoIcon className="risk-icon__svg" title={`Seguro ${tipoLabel}`} />
+            <TipoIcon
+              className="risk-icon__svg"
+              title={`Seguro ${tipoLabel}`}
+            />
           ) : (
             <div className="risk-icon__placeholder">?</div>
           )}
@@ -404,11 +407,14 @@ const StepValidacionRiesgo = ({ onNext }: StepValidacionRiesgoProps) => {
                     components={{
                       strong: ({ children }) => {
                         const text = String(children ?? "");
-                        const isRejectPhrase = /ha concluido con un estado de rechazo/i.test(
-                          text,
-                        );
+                        const isRejectPhrase =
+                          /ha concluido con un estado de rechazo/i.test(text);
                         return (
-                          <strong className={isRejectPhrase ? "validation-reject" : undefined}>
+                          <strong
+                            className={
+                              isRejectPhrase ? "validation-reject" : undefined
+                            }
+                          >
                             {children}
                           </strong>
                         );

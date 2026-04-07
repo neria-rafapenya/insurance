@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { useAuth } from "../auth/AuthContext";
@@ -20,9 +20,9 @@ const Header = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [projects, setProjects] = useState<WizardProjectArchive[]>([]);
   const [proposals, setProposals] = useState<SavedProposal[]>([]);
-  const [activeModal, setActiveModal] = useState<"projects" | "proposals" | null>(
-    null,
-  );
+  const [activeModal, setActiveModal] = useState<
+    "projects" | "proposals" | null
+  >(null);
   const { logout, user } = useAuth();
   const isAdmin = user?.role?.toLowerCase() === "admin";
 
@@ -49,7 +49,9 @@ const Header = () => {
 
   const handleDownloadProposal = async (proposal: SavedProposal) => {
     try {
-      const response = await authFetch(`/ai/step-propuesta/pdf/${proposal.filename}`);
+      const response = await authFetch(
+        `/ai/step-propuesta/pdf/${proposal.filename}`,
+      );
       if (!response.ok) {
         throw new Error("Download error");
       }
@@ -115,11 +117,15 @@ const Header = () => {
           </button>
         ) : null}
       </div>
-      <div className={`layout__drawer ${drawerOpen ? "layout__drawer--open" : ""}`}>
+      <div
+        className={`layout__drawer ${drawerOpen ? "layout__drawer--open" : ""}`}
+      >
         <div className="layout__drawer-header">
           <div>
             <div className="layout__drawer-title">Proyectos</div>
-            <div className="layout__drawer-subtitle">Historial y presupuestos</div>
+            <div className="layout__drawer-subtitle">
+              Historial y presupuestos
+            </div>
           </div>
           <button
             type="button"
@@ -171,7 +177,9 @@ const Header = () => {
           <div className="layout__modal">
             <div className="layout__modal-header">
               <h3>
-                {activeModal === "projects" ? "Otros proyectos" : "Presupuestos PDF"}
+                {activeModal === "projects"
+                  ? "Otros proyectos"
+                  : "Presupuestos PDF"}
               </h3>
               <button
                 type="button"
@@ -215,8 +223,11 @@ const Header = () => {
                             {proposal.projectName}
                           </div>
                           <div className="drawer-list__meta">
-                            {proposal.tipoSeguro} · {proposal.precioTotal.toFixed(2)} € ·{" "}
-                            {new Date(proposal.createdAt).toLocaleDateString("es-ES")}
+                            {proposal.tipoSeguro} ·{" "}
+                            {proposal.precioTotal.toFixed(2)} € ·{" "}
+                            {new Date(proposal.createdAt).toLocaleDateString(
+                              "es-ES",
+                            )}
                           </div>
                         </div>
                         <button

@@ -1,5 +1,3 @@
-import React from "react";
-
 import IconBack from "./icons/IconBack";
 
 interface StepperActionsProps {
